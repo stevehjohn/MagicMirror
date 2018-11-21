@@ -33,45 +33,82 @@
             padding-left: 5px;
         }
 
-        #weather-icon {
+        #weather-icons {
             position: absolute;
-            top: 15px;
-            left: 65%;
-            font-size: 48px;
+            top: 20px;
+            right: 10px;
         }
+
+            #weather-icons i {
+                padding-left: 20px;
+                font-size: 48px;
+            }
 
         #location {
             padding-top: 5px;
             position: absolute;
             top: 80px;
-            left: 65%;
+            right: 10px;
         }
 
         #sunrise-icon {
             position: absolute;
             top: 120px;
-            left: 65%;
+            right: 85px;
         }
 
         #sunrise {
             position: absolute;
             top: 117px;
-            left: 65%;
-            margin-left: 45px;
+            right: 10px;
         }
 
         #sunset-icon {
             position: absolute;
             top: 150px;
-            left: 65%;
-            padding-left: 3px;
+            right: 88px;
         }
 
         #sunset {
             position: absolute;
             top: 150px;
-            left: 65%;
-            margin-left: 45px;
+            right: 10px;
+        }
+
+        #temp-icon {
+            position: absolute;
+            top: 185px;
+            right: 94px;
+        }
+
+        #temp {
+            position: absolute;
+            top: 185px;
+            right: 10px;
+        }
+    
+        #temp-max-icon {
+            position: absolute;
+            top: 220px;
+            right: 86px;
+        }
+
+        #temp-max {
+            position: absolute;
+            top: 220px;
+            right: 10px;
+        }
+    
+        #temp-min-icon {
+            position: absolute;
+            top: 255px;
+            right: 86px;
+        }
+
+        #temp-min {
+            position: absolute;
+            top: 255px;
+            right: 10px;
         }
     </style>
     <script language="javascript" type="text/javascript">
@@ -80,7 +117,7 @@
         }
 
         function updateWeather() {
-            var data = $.ajax({
+            $.ajax({
                 url: 'http://api.openweathermap.org/data/2.5/weather?q=Bristol,uk&appid=699212f33ea504f4e8a1a0f03cd6a7e0',
                 type: 'GET',
                 success: function (result) {
@@ -90,7 +127,150 @@
         }
 
         function doUpdateWeather(data) {
-            console.log(data);
+            var sunrise = new Date(data.sys.sunrise * 1000);
+
+            var output = pad(sunrise.getHours()) + ':' + pad(sunrise.getMinutes());
+            $('#sunrise').text(output);
+
+            var sunset = new Date(data.sys.sunset * 1000);
+
+            output = pad(sunset.getHours()) + ':' + pad(sunset.getMinutes());
+            $('#sunset').text(output);
+
+            output = Math.round(data.main.temp - 273.15) + '&deg;C';
+            $('#temp').html(output);
+
+            output = Math.round(data.main.temp_max - 273.15) + '&deg;C';
+            $('#temp-max').html(output);
+
+            output = Math.round(data.main.temp_min - 273.15) + '&deg;C';
+            $('#temp-min').html(output);
+
+            var icons = '';
+
+            for (var i = 0; i < data.weather.length; i++) {
+
+                var icon = 'wi wi-';
+
+                var today = new Date();
+
+                var night = false;
+
+                if (today > sunrise && today < sunset) {
+                    icon += 'day-';
+                } else {
+                    icon += 'night-';
+                    night = true;
+                }
+
+                var weatherId = data.weather[i].id;
+
+                switch (weatherId) {
+                    case 200:
+                    case 201:
+                    case 202:
+                    case 230:
+                    case 231:
+                    case 232:
+                        icon += 'storm-showers';
+                        break;
+                    case 210:
+                    case 211:
+                    case 212:
+                    case 221:
+                        icon += 'lightning';
+                        break;
+                    case 300:
+                    case 301:
+                    case 302:
+                    case 310:
+                    case 311:
+                    case 312:
+                    case 313:
+                    case 314:
+                    case 321:
+                        icon += 'rain-mix';
+                        break;
+                    case 500:
+                    case 501:
+                    case 502:
+                    case 503:
+                    case 504:
+                    case 511:
+                    case 520:
+                    case 521:
+                    case 522:
+                    case 531:
+                        icon += 'rain';
+                        break;
+                    case 600:
+                    case 601:
+                    case 602:
+                    case 615:
+                    case 616:
+                    case 620:
+                    case 621:
+                    case 622:
+                        icon += 'snow';
+                        break;
+                    case 611:
+                    case 612:
+                        icon += 'sleet';
+                        break;
+                    case 701:
+                    case 721:
+                        if (night) {
+                            icon += 'fog';
+                        } else {
+                            icon += 'haze';
+                        }
+                        break;
+                    case 711:
+                    case 731:
+                    case 741:
+                    case 751:
+                    case 761:
+                    case 762:
+                        icon += 'fog';
+                        break;
+                    case 771:
+                    case 781:
+                        if (night) {
+                            icon += 'cloudy-gusts';
+                        } else {
+                            icon += 'windy';
+                        }
+                        break;
+                    case 800:
+                        if (night) {
+                            icon += 'clear';
+                        } else {
+                            icon += 'sunny';
+                        }
+                        break;
+                    case 801:
+                    case 802:
+                    case 803:
+                    case 804:
+                        icon += 'cloudy';
+                        break;
+                    default:
+                        icon = 'wi-alien';
+                        break;
+                }
+
+                icons += '<i class="' + icon + '"></i>';
+            }
+
+            $('#weather-icons').html(icons);
+        }
+
+        function pad(number) {
+            if (number < 10) {
+                return '0' + number;
+            } else {
+                return number;
+            }
         }
 
         function updateDateTime() {
@@ -185,45 +365,29 @@
 
             output += ' ' + date.getFullYear();
 
-            document.getElementById('date').innerHTML = output;
+            $('#date').html(output);
 
-            if (date.getHours() < 10) {
-                output = '0';
-            } else {
-                output = '';
-            }
-            output += date.getHours() + ':';
+            output = pad(date.getHours()) + ':' + pad(date.getMinutes()) + '.<span class="seconds">' + pad(date.getSeconds()) + '</span>';
 
-            if (date.getMinutes() < 10) {
-                output += '0';
-            } else {
-                output += '';
-            }
-            output += date.getMinutes() + '.<span class="seconds">';
-
-            if (date.getSeconds() < 10) {
-                output += '0';
-            } else {
-                output += '';
-            }
-            output += date.getSeconds() + '</span>';
-
-            document.getElementById('time').innerHTML = output;
+            $('#time').html(output);
         }
-        // 699212f33ea504f4e8a1a0f03cd6a7e0
     </script>
 </head>
 <body>
     <div id="time"></div>
     <div id="date"></div>
-    <div id="weather-icon">
-        <i class="wi wi-day-sunny"></i>
-    </div>
+    <div id="weather-icons"></div>
     <div id="location">Bristol, UK</div>
     <div id="sunrise-icon"><i class="wi wi-sunrise"></i></div>
     <div id="sunrise">07:00</div>
     <div id="sunset-icon"><i class="wi wi-horizon"></i></div>
     <div id="sunset">07:00</div>
+    <div id="temp-icon"><i class="wi wi-thermometer"></i></div>
+    <div id="temp"></div>
+    <div id="temp-max-icon"><i class="wi wi-thermometer"></i> <i class="wi wi-direction-up"></i></div>
+    <div id="temp-max"></div>
+    <div id="temp-min-icon"><i class="wi wi-thermometer"></i> <i class="wi wi-direction-down"></i></div>
+    <div id="temp-min"></div>
 </body>
 <script>
     setInterval(updateMirror, 600000);

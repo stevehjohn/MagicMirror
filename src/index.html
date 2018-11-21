@@ -12,6 +12,7 @@
             color: white;
             font-family: 'Roboto', sans-serif;
             font-size: 24px;
+            overflow-x: hidden;
         }
 
         #date {
@@ -29,8 +30,8 @@
         }
 
         .seconds {
-            font-size: 24px;
-            padding-left: 5px;
+            font-size: 32px;
+            padding-left: 3px;
         }
 
         #weather-icons {
@@ -86,7 +87,7 @@
             top: 185px;
             right: 10px;
         }
-    
+
         #temp-max-icon {
             position: absolute;
             top: 220px;
@@ -98,7 +99,7 @@
             top: 220px;
             right: 10px;
         }
-    
+
         #temp-min-icon {
             position: absolute;
             top: 255px;
@@ -110,10 +111,209 @@
             top: 255px;
             right: 10px;
         }
+
+        #news-headline {
+            font-size: 16px;
+            font-weight: bold;
+            position: absolute;
+            top: 45%;
+            width: calc(100% - 20px);
+        }
+
+        #news-byline {
+            font-size: 16px;
+            position: absolute;
+            top: calc(45% + 24px);
+            width: calc(100% - 20px);
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+                left: 100px;
+            }
+
+            to {
+                opacity: 1;
+                left: 10px;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                opacity: 1;
+                left: 10px;
+            }
+
+            to {
+                opacity: 0;
+                left: -100px;
+            }
+        }
+
+        .news-fade-in {
+            animation: fadein 0.5s;
+        }
+
+        .news-fade-out {
+            animation: fadeout 0.5s;
+        }
+
+        #calendar-titles {
+            position: absolute;
+            top: 65%;
+            left: 10px;
+            width: calc(100% - 20px);
+            border-left: 1px solid white;
+        }
+
+        .day-title {
+            width: calc(14%);
+            height: 20px;
+            border: 1px solid white;
+            border-left: none;
+            float: left;
+            display: inline-block;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        #calendar-bodies {
+            position: absolute;
+            top: calc(65% + 20px);
+            left: 10px;
+            width: calc(100% - 20px);
+            border-left: 1px solid white;
+            height: calc(20%);
+        }
+
+        .day-box {
+            width: calc(14%);
+            height: 100%;
+            border: 1px solid white;
+            border-left: none;
+            border-top: none;
+            float: left;
+            display: inline-block;
+        }
+
+            .day-box div {
+                margin-left: 5px;
+                margin-top: 6px;
+                margin-right: 5px;
+                padding: 5px;
+                font-size: 14px;
+                border-radius: 6px;
+            }
+
+        .chore {
+            background-color: #D5C3CD;
+            color: black;
+        }
+
+        .food {
+            background-color: #566293;
+            color: white;
+        }
+
+        .fun {
+            background-color: #2E363B;
+            color: white;
+        }
     </style>
     <script language="javascript" type="text/javascript">
+        var articles;
+        var article = 0;
+        var newsRefreshTime = 10;
+
         function updateMirror() {
             updateWeather();
+            updateNewsFeed();
+            updateCalendar();
+        }
+
+        function updateCalendar() {
+            var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            $('.day').each().remove();
+
+            var today = new Date();
+            var day = today.getDay();
+
+            for (var i = 0; i < 7; i++) {
+                $('#calendar-titles').append('<div class="day-title">' + days[day] + '</div>');
+
+                var content = '';
+                switch (day) {
+                    case 3:
+                        content = '<div class="chore">Put bins out</div>';
+                        break;
+                    case 5:
+                        content = '<div class="food">Order from Just Eat</div>';
+                        break;
+                    case 6:
+                        content = '<div class="fun"><del>Go to Gym</del></div>';
+                        content += '<div class="food">Order from Just Eat</div>';
+                        break;
+                }
+
+                $('#calendar-bodies').append('<div class="day-box">' + content + '</div>');
+
+                day++;
+                if (day > 6) {
+                    day = 0;
+                }
+            }
+        }
+
+        function updateNewsFeed() {
+            articles = [];
+
+            var sections = ['technology', 'science'];
+
+            for (var i = 0; i < sections.length; i++) {
+                $.ajax({
+                    url: 'https://content.guardianapis.com/search?api-key=a2775919-3beb-4cdd-9e88-2612f0d551b1&page-size=10&show-fields=trail-text,headline&section=' + sections[i],
+                    type: 'GET',
+                    success: function (data) {
+                        addArticles(data);
+                    }
+                });
+            }
+        }
+
+        function addArticles(data) {
+            for (var i = 0; i < data.response.results.length; i++) {
+                articles.push(data.response.results[i].fields);
+            }
+        }
+
+        function showArticle() {
+            var headline = '';
+            var byline = '';
+            if (article < articles.length) {
+                headline = articles[article].headline;
+                byline = articles[article].trailText;
+                article++;
+                if (article >= articles.length) {
+                    article = 0;
+                }
+            }
+            var headlineElement = $('<div id="news-headline" class="news-fade-in">' + headline + '</div>');
+            var bylineElement = $('<div id="news-byline" class="news-fade-in">' + byline + '</div>');
+            $('body').append(headlineElement);
+            $('body').append(bylineElement);
+            setTimeout(function () {
+                headlineElement.addClass('news-fade-out');
+                bylineElement.addClass('news-fade-out');
+                setTimeout(function () {
+                    headlineElement.remove();
+                    bylineElement.remove();
+                    showArticle();
+                },
+                    500);
+            },
+                (newsRefreshTime - 1.5) * 1000);
         }
 
         function updateWeather() {
@@ -388,6 +588,8 @@
     <div id="temp-max"></div>
     <div id="temp-min-icon"><i class="wi wi-thermometer"></i> <i class="wi wi-direction-down"></i></div>
     <div id="temp-min"></div>
+    <div id="calendar-titles"></div>
+    <div id="calendar-bodies"></div>
 </body>
 <script>
     setInterval(updateMirror, 600000);
@@ -395,5 +597,6 @@
 
     updateMirror();
     updateDateTime();
+    setTimeout(showArticle, 2000);
 </script>
 </html>

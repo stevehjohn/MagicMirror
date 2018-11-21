@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Magic Mirror</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            font-size: 24px;
+        }
+        #date {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        #time {
+            font-size: 56px;
+            font-weight: bold;
+            position: absolute;
+            left: 10px;
+            top: 50px;
+        }
+        .seconds {
+            font-size: 24px;
+            padding-left: 5px;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        function updateMirror() {
+            
+        }
+
+        function updateWeather() {
+
+        }
+
+        function updateDateTime() {
+            var date = new Date();
+
+            var output = date.getDay();
+
+            switch (date.getDay()) {
+            case 0:
+                output = 'Sunday';
+                break;
+            case 1:
+                output = 'Monday';
+                break;
+            case 2:
+                output = 'Tuesday';
+                break;
+            case 3:
+                output = 'Wednesday';
+                break;
+            case 4:
+                output = 'Thursday';
+                break;
+            case 5:
+                output = 'Friday';
+                break;
+            case 6:
+                output = 'Saturday';
+            }
+
+            output += ', ' + date.getDate() + '<sup>';
+
+            switch (date.getDate()) {
+                case 1:
+                case 21:
+                case 31:
+                    output += 'st';
+                    break;
+                case 2:
+                case 22:
+                    output += 'nd';
+                    break;
+                case 3:
+                case 23:
+                    output += 'rd';
+                    break;
+                default:
+                    output += 'th';
+                    break;
+            }
+
+            output += '</sup> ';
+
+            switch (date.getMonth()) {
+                case 0:
+                    output += 'January';
+                    break;
+                case 1:
+                    output += 'February';
+                    break;
+                case 2:
+                    output += 'March';
+                    break;
+                case 3:
+                    output += 'April';
+                    break;
+                case 4:
+                    output += 'May';
+                    break;
+                case 5:
+                    output += 'June';
+                    break;
+                case 6:
+                    output += 'July';
+                    break;
+                case 7:
+                    output += 'August';
+                    break;
+                case 8:
+                    output += 'September';
+                    break;
+                case 9:
+                    output += 'October';
+                    break;
+                case 10:
+                    output += 'November';
+                    break;
+                case 11:
+                    output += 'December';
+                    break;
+            }
+
+            output += ' ' + date.getFullYear();
+
+            document.getElementById('date').innerHTML = output;
+
+            if (date.getHours() < 10) {
+                output = '0';
+            } else {
+                output = '';
+            }
+            output += date.getHours() + ':';
+
+            if (date.getMinutes() < 10) {
+                output += '0';
+            } else {
+                output += '';
+            }
+            output += date.getMinutes() + '.<span class="seconds">';
+
+            if (date.getSeconds() < 10) {
+                output += '0';
+            } else {
+                output += '';
+            }
+            output += date.getSeconds() + '</span>';
+
+            document.getElementById('time').innerHTML = output;
+        }
+    </script>
+</head>
+<body>
+<div id="date"></div>
+<div id="time"></div>
+<div id="weather"></div>
+</body>
+<script>
+    setInterval(updateMirror, 600000);
+    setInterval(updateDateTime, 1000);
+
+    updateMirror();
+    updateDateTime();
+</script>
+</html>

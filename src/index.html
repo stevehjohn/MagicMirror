@@ -310,8 +310,22 @@
 
                 var content = '';
                 switch (day) {
+                    case 0:
+                        content = '<div class="fun">Chill Out</div>';
+                        break;
+                    case 1:
+                        content = '<div class="chore">Jedi Training<div>';
+                        break;
+                    case 2:
+                        content = '<div class="food">Go to Cathay Rendezvous</div>';
+                        content += '<div class="chore">Clean Flat</div>';
+                        content += '<div class="fun">Guitar Lesson</div>';
+                        break;
                     case 3:
                         content = '<div class="chore">Put bins out</div>';
+                        break;
+                    case 4:
+                        content = '<div class="fun">Book Club</div>';
                         break;
                     case 5:
                         content = '<div class="food">Order from Just Eat</div>';

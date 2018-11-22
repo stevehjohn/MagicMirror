@@ -253,7 +253,7 @@
 
         function updateQuote() {
             $.ajax({
-                url: 'http://quotes.rest/qod.json?category=funny',
+                url: 'https://quotes.rest/qod.json?category=funny',
                 success: function(data) {
                     $('#quote-content').text(data.contents.quotes[0].quote);
                     $('#quote-author').text(data.contents.quotes[0].author);
@@ -347,7 +347,7 @@
 
         function updateWeather() {
             $.ajax({
-                url: 'http://api.openweathermap.org/data/2.5/weather?q=Bristol,uk&appid=699212f33ea504f4e8a1a0f03cd6a7e0',
+                url: 'https://api.openweathermap.org/data/2.5/weather?q=Bristol,uk&appid=699212f33ea504f4e8a1a0f03cd6a7e0',
                 type: 'GET',
                 success: function (result) {
                     doUpdateWeather(result);

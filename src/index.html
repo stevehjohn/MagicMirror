@@ -267,6 +267,12 @@
             left: 140px;
             width: 50px;
         }
+
+        #day-progress {
+            position: absolute;
+            width: 190px;
+            top: 3px;
+        }
     </style>
     <script language="javascript" type="text/javascript">
         var articles;
@@ -593,6 +599,7 @@
             $('#hours-progress').css('width', Math.round(hours * 70) + 'px');
             $('#minutes-progress').css('width', Math.round(minutes * 70) + 'px');
             $('#seconds-progress').css('width', Math.round((date.getSeconds() / 59) * 50) + 'px');
+            $('#day-progress').css('width', Math.round(hours * 190) + 'px');
         }
     </script>
 </head>
@@ -602,6 +609,7 @@
         <div id="hours-progress"></div>
         <div id="minutes-progress"></div>
         <div id="seconds-progress"></div>
+        <div id="day-progress"></div>
     </div>
     <div id="date"></div>
     <div id="weather-icons"></div>

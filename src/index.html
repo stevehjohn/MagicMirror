@@ -40,10 +40,10 @@
             right: 10px;
         }
 
-        #weather-icons i {
-            padding-left: 20px;
-            font-size: 48px;
-        }
+            #weather-icons i {
+                padding-left: 20px;
+                font-size: 48px;
+            }
 
         #location {
             padding-top: 5px;
@@ -161,16 +161,16 @@
 
         #calendar-titles {
             position: absolute;
-            top: 60%;
+            top: 58%;
             left: 10px;
             width: calc(100% - 20px);
-            border-left: 1px solid #ffffff;
+            /*border-left: 1px solid #ffffff;*/
         }
 
         .day-title {
             width: calc(14%);
             height: 20px;
-            border: 1px solid #ffffff;
+            /*border: 1px solid #ffffff;*/
             border-left: none;
             float: left;
             display: inline-block;
@@ -180,31 +180,32 @@
 
         #calendar-bodies {
             position: absolute;
-            top: calc(60% + 20px);
+            top: calc(58% + 20px);
             left: 10px;
             width: calc(100% - 20px);
-            border-left: 1px solid #ffffff;
+            /*border-left: 1px solid #ffffff;*/
             height: calc(20%);
+            padding-top: 10px;
         }
 
         .day-box {
             width: calc(14%);
             height: 100%;
-            border: 1px solid #ffffff;
+            /*border: 1px solid #ffffff;*/
             border-left: none;
             border-top: none;
             float: left;
             display: inline-block;
         }
 
-        .day-box div {
-            margin-left: 5px;
-            margin-top: 6px;
-            margin-right: 5px;
-            padding: 5px;
-            font-size: 14px;
-            border-radius: 6px;
-        }
+            .day-box div {
+                margin-left: 5px;
+                margin-top: 6px;
+                margin-right: 5px;
+                padding: 5px;
+                font-size: 14px;
+                border-radius: 6px;
+            }
 
         .chore {
             background-color: #296569;
@@ -239,6 +240,33 @@
             margin-top: -10px;
             float: right;
         }
+
+        #progress-bars {
+            position: absolute;
+            top: 72px;
+        }
+
+        #progress-bars div {
+            height: 1px;
+            background-color: #ffffff;
+        }
+
+        #hours-progress {
+            position: absolute;
+            width: 70px;
+        }
+
+        #minutes-progress {
+            position: absolute;
+            left: 70px;
+            width: 70px;
+        }
+
+        #seconds-progress {
+            position: absolute;
+            left: 140px;
+            width: 50px;
+        }
     </style>
     <script language="javascript" type="text/javascript">
         var articles;
@@ -254,7 +282,7 @@
         function updateQuote() {
             $.ajax({
                 url: 'https://quotes.rest/qod.json?category=funny',
-                success: function(data) {
+                success: function (data) {
                     $('#quote-content').text(data.contents.quotes[0].quote);
                     $('#quote-author').text(data.contents.quotes[0].author);
                 }
@@ -336,13 +364,13 @@
             setTimeout(function () {
                 headlineElement.addClass('news-fade-out');
                 bylineElement.addClass('news-fade-out');
-                    setTimeout(function() {
-                            headlineElement.remove();
-                            bylineElement.remove();
-                            showArticle();
-                        },
-                        500);
-                }, (newsRefreshTime - 1.5) * 1000);
+                setTimeout(function () {
+                    headlineElement.remove();
+                    bylineElement.remove();
+                    showArticle();
+                },
+                    500);
+            }, (newsRefreshTime - 1.5) * 1000);
         }
 
         function updateWeather() {
@@ -558,11 +586,23 @@
             output = pad(date.getHours()) + ':' + pad(date.getMinutes()) + '.<span class="seconds">' + pad(date.getSeconds()) + '</span>';
 
             $('#time').html(output);
+
+            var hours = (date.getHours() * 3600 + date.getMinutes() * 60) / 86400;
+            var minutes = (date.getMinutes() * 60 + date.getSeconds()) / 3600;
+
+            $('#hours-progress').css('width', Math.round(hours * 70) + 'px');
+            $('#minutes-progress').css('width', Math.round(minutes * 70) + 'px');
+            $('#seconds-progress').css('width', Math.round((date.getSeconds() / 59) * 50) + 'px');
         }
     </script>
 </head>
 <body>
     <div id="time"></div>
+    <div id="progress-bars">
+        <div id="hours-progress"></div>
+        <div id="minutes-progress"></div>
+        <div id="seconds-progress"></div>
+    </div>
     <div id="date"></div>
     <div id="weather-icons"></div>
     <div id="location">Bristol, UK</div>

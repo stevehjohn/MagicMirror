@@ -8,8 +8,8 @@
     <script src="javascript/jquery.js" type="text/javascript" language="javascript"></script>
     <style>
         body {
-            background-color: black;
-            color: white;
+            background-color: #000000;
+            color: #ffffff;
             font-family: 'Roboto', sans-serif;
             font-size: 24px;
             overflow-x: hidden;
@@ -40,10 +40,10 @@
             right: 10px;
         }
 
-            #weather-icons i {
-                padding-left: 20px;
-                font-size: 48px;
-            }
+        #weather-icons i {
+            padding-left: 20px;
+            font-size: 48px;
+        }
 
         #location {
             padding-top: 5px;
@@ -161,16 +161,16 @@
 
         #calendar-titles {
             position: absolute;
-            top: 65%;
+            top: 60%;
             left: 10px;
             width: calc(100% - 20px);
-            border-left: 1px solid white;
+            border-left: 1px solid #ffffff;
         }
 
         .day-title {
             width: calc(14%);
             height: 20px;
-            border: 1px solid white;
+            border: 1px solid #ffffff;
             border-left: none;
             float: left;
             display: inline-block;
@@ -180,51 +180,69 @@
 
         #calendar-bodies {
             position: absolute;
-            top: calc(65% + 20px);
+            top: calc(60% + 20px);
             left: 10px;
             width: calc(100% - 20px);
-            border-left: 1px solid white;
+            border-left: 1px solid #ffffff;
             height: calc(20%);
         }
 
         .day-box {
             width: calc(14%);
             height: 100%;
-            border: 1px solid white;
+            border: 1px solid #ffffff;
             border-left: none;
             border-top: none;
             float: left;
             display: inline-block;
         }
 
-            .day-box div {
-                margin-left: 5px;
-                margin-top: 6px;
-                margin-right: 5px;
-                padding: 5px;
-                font-size: 14px;
-                border-radius: 6px;
-            }
+        .day-box div {
+            margin-left: 5px;
+            margin-top: 6px;
+            margin-right: 5px;
+            padding: 5px;
+            font-size: 14px;
+            border-radius: 6px;
+        }
 
         .chore {
-            background-color: #D5C3CD;
-            color: black;
+            background-color: #296569;
+            color: white;
         }
 
         .food {
-            background-color: #566293;
+            background-color: #DE563A;
             color: white;
         }
 
         .fun {
-            background-color: #2E363B;
+            background-color: #9AC681;
             color: white;
+        }
+
+        #quote {
+            position: absolute;
+            left: 10px;
+            width: calc(100% - 20px);
+            top: 85%;
+            text-align: center;
+        }
+
+        #quote-content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        #quote-author {
+            font-size: 12px;
+            padding-top: 10px;
         }
     </style>
     <script language="javascript" type="text/javascript">
         var articles;
         var article = 0;
-        var newsRefreshTime = 10;
+        var newsRefreshTime = 15;
 
         function updateMirror() {
             updateWeather();
@@ -232,10 +250,21 @@
             updateCalendar();
         }
 
+        function updateQuote() {
+            $.ajax({
+                url: 'http://quotes.rest/qod.json?category=funny',
+                success: function(data) {
+                    $('#quote-content').text(data.contents.quotes[0].quote);
+                    $('#quote-author').text(data.contents.quotes[0].author);
+                }
+            });
+        }
+
         function updateCalendar() {
             var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            $('.day').each().remove();
+            $('.day-title').each(function () { $(this).remove(); });
+            $('.day-box').each(function () { $(this).remove(); });
 
             var today = new Date();
             var day = today.getDay();
@@ -306,14 +335,13 @@
             setTimeout(function () {
                 headlineElement.addClass('news-fade-out');
                 bylineElement.addClass('news-fade-out');
-                setTimeout(function () {
-                    headlineElement.remove();
-                    bylineElement.remove();
-                    showArticle();
-                },
-                    500);
-            },
-                (newsRefreshTime - 1.5) * 1000);
+                    setTimeout(function() {
+                            headlineElement.remove();
+                            bylineElement.remove();
+                            showArticle();
+                        },
+                        500);
+                }, (newsRefreshTime - 1.5) * 1000);
         }
 
         function updateWeather() {
@@ -366,75 +394,35 @@
                 var weatherId = data.weather[i].id;
 
                 switch (weatherId) {
-                    case 200:
-                    case 201:
-                    case 202:
-                    case 230:
-                    case 231:
-                    case 232:
+                    case 200: case 201: case 202: case 230: case 231: case 232:
                         icon += 'storm-showers';
                         break;
-                    case 210:
-                    case 211:
-                    case 212:
-                    case 221:
+                    case 210: case 211: case 212: case 221:
                         icon += 'lightning';
                         break;
-                    case 300:
-                    case 301:
-                    case 302:
-                    case 310:
-                    case 311:
-                    case 312:
-                    case 313:
-                    case 314:
-                    case 321:
+                    case 300: case 301: case 302: case 310: case 311: case 312: case 313: case 314: case 321:
                         icon += 'rain-mix';
                         break;
-                    case 500:
-                    case 501:
-                    case 502:
-                    case 503:
-                    case 504:
-                    case 511:
-                    case 520:
-                    case 521:
-                    case 522:
-                    case 531:
+                    case 500: case 501: case 502: case 503: case 504: case 511: case 520: case 521: case 522: case 531:
                         icon += 'rain';
                         break;
-                    case 600:
-                    case 601:
-                    case 602:
-                    case 615:
-                    case 616:
-                    case 620:
-                    case 621:
-                    case 622:
+                    case 600: case 601: case 602: case 615: case 616: case 620: case 621: case 622:
                         icon += 'snow';
                         break;
-                    case 611:
-                    case 612:
+                    case 611: case 612:
                         icon += 'sleet';
                         break;
-                    case 701:
-                    case 721:
+                    case 701: case 721:
                         if (night) {
                             icon += 'fog';
                         } else {
                             icon += 'haze';
                         }
                         break;
-                    case 711:
-                    case 731:
-                    case 741:
-                    case 751:
-                    case 761:
-                    case 762:
+                    case 711: case 731: case 741: case 751: case 761: case 762:
                         icon += 'fog';
                         break;
-                    case 771:
-                    case 781:
+                    case 771: case 781:
                         if (night) {
                             icon += 'cloudy-gusts';
                         } else {
@@ -448,10 +436,7 @@
                             icon += 'sunny';
                         }
                         break;
-                    case 801:
-                    case 802:
-                    case 803:
-                    case 804:
+                    case 801: case 802: case 803: case 804:
                         icon += 'cloudy';
                         break;
                     default:
@@ -459,7 +444,9 @@
                         break;
                 }
 
-                icons += '<i class="' + icon + '"></i>';
+                if (icons.indexOf(icon) < 0) {
+                    icons += '<i class="' + icon + '"></i>';
+                }
             }
 
             $('#weather-icons').html(icons);
@@ -590,13 +577,21 @@
     <div id="temp-min"></div>
     <div id="calendar-titles"></div>
     <div id="calendar-bodies"></div>
-</body>
-<script>
-    setInterval(updateMirror, 600000);
-    setInterval(updateDateTime, 1000);
+    <div id="quote">
+        <div>
+            <sub>“</sub><span id="quote-content"></span><sub>”</sub>
+        </div>
+        <div id="quote-author"></div>
+    </div>
+    <script>
+        setInterval(updateMirror, 600000);
+        setInterval(updateDateTime, 1000);
+        setInterval(updateQuote, 86400000);
 
-    updateMirror();
-    updateDateTime();
-    setTimeout(showArticle, 2000);
-</script>
+        updateMirror();
+        updateDateTime();
+        updateQuote();
+        setTimeout(showArticle, 2000);
+    </script>
+</body>
 </html>

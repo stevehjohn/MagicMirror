@@ -40,10 +40,10 @@
             right: 10px;
         }
 
-            #weather-icons i {
-                padding-left: 20px;
-                font-size: 48px;
-            }
+        #weather-icons i {
+            padding-left: 20px;
+            font-size: 48px;
+        }
 
         #location {
             padding-top: 5px;
@@ -116,14 +116,14 @@
             font-size: 36px;
             font-weight: bold;
             position: absolute;
-            top: 45%;
+            top: 35%;
             width: calc(100% - 20px);
         }
 
         #news-byline {
             font-size: 36px;
             position: absolute;
-            top: calc(45% + 40px);
+            top: calc(35% + 40px);
             width: calc(100% - 20px);
         }
 
@@ -243,7 +243,7 @@
 
         #progress-bars {
             position: absolute;
-            top: 72px;
+            top: 75px;
         }
 
         #progress-bars div {
@@ -310,15 +310,31 @@
 
                 var content = '';
                 switch (day) {
+                    case 0:
+                        content = '<div class="fun">Chill Out</div>';
+                        break;
+                    case 1:
+                        content = '<div class="chore">Jedi Training</div>';
+                        content += '<div class="food">Cook Something Yourself</div>';
+                        break;
+                    case 2:
+                        content = '<div class="chore">Clean Flat</div>';
+                        content += '<div class="fun">Guitar Lesson</div>';
+                        content += '<div class="food">Go to Cathay Rendezvous</div>';
+                        break;
                     case 3:
                         content = '<div class="chore">Put bins out</div>';
+                        content += '<div class="food">Order KFC from Just Eat</div>';
+                        break;
+                    case 4:
+                        content = '<div class="fun">Book Club</div>';
                         break;
                     case 5:
-                        content = '<div class="food">Order from Just Eat</div>';
+                        content = '<div class="food">Order Chinese from Just Eat</div>';
                         break;
                     case 6:
-                        content = '<div class="fun"><del>Go to Gym</del></div>';
-                        content += '<div class="food">Order from Just Eat</div>';
+                        content = '<div class="fun"><del>Go to Gym</del><br/>Actually ****** that</div>';
+                        content += '<div class="food">Order Indian from Just Eat</div>';
                         break;
                 }
 

@@ -274,6 +274,11 @@
             position: absolute;
             top: 50px;
         }
+
+        a, a:hover, a:visited {
+            text-decoration: none;
+            color: #ffffff;
+        }
     </style>
     <script language="javascript" type="text/javascript">
         var articles;
@@ -296,6 +301,10 @@
             });
         }
 
+        function manageDay(day) {
+            alert(day);
+        }
+
         function updateCalendar() {
             var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
@@ -306,7 +315,7 @@
             var day = today.getDay();
 
             for (var i = 0; i < 7; i++) {
-                $('#calendar-titles').append('<div class="day-title">' + days[day] + '</div>');
+                $('#calendar-titles').append('<div class="day-title"><a href="#" onclick="manageDay(' + day + ');">' + days[day] + '</a></div>');
 
                 var content = '';
                 switch (day) {
@@ -515,7 +524,7 @@
         function updateDateTime() {
             var date = new Date();
 
-            var output = date.getDay();
+            var output;
 
             switch (date.getDay()) {
                 case 0:

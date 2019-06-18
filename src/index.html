@@ -285,6 +285,10 @@
         var article = 0;
         var newsRefreshTime = 15;
 
+        // Forkers - please get your own ones of these!
+        var weatherApiKey = '699212f33ea504f4e8a1a0f03cd6a7e0';
+        var newsApiKey = 'a2775919-3beb-4cdd-9e88-2612f0d551b1';
+
         function updateMirror() {
             updateWeather();
             updateNewsFeed();
@@ -363,7 +367,7 @@
 
             for (var i = 0; i < sections.length; i++) {
                 $.ajax({
-                    url: 'https://content.guardianapis.com/search?api-key=a2775919-3beb-4cdd-9e88-2612f0d551b1&page-size=10&show-fields=trail-text,headline&section=' + sections[i],
+                    url: `https://content.guardianapis.com/search?api-key=${newsApiKey}&page-size=10&show-fields=trail-text,headline&section=${sections[i]}`,
                     type: 'GET',
                     success: function (data) {
                         addArticles(data);
@@ -407,7 +411,7 @@
 
         function updateWeather() {
             $.ajax({
-                url: 'https://api.openweathermap.org/data/2.5/weather?q=Bristol,uk&appid=699212f33ea504f4e8a1a0f03cd6a7e0',
+                url: `https://api.openweathermap.org/data/2.5/weather?q=Bristol,uk&appid=${weatherApiKey}`,
                 type: 'GET',
                 success: function (result) {
                     doUpdateWeather(result);
